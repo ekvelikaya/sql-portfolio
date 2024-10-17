@@ -1,5 +1,6 @@
 
 -- Write a solution to show the unique ID of each user, If a user does not have a unique ID replace just show null.
+
 SELECT unique_id,
 	   name
 FROM employees e
@@ -7,6 +8,7 @@ LEFT JOIN EmployeeUNI u
 	ON e.id=u.id;
 
 -- Write a solution to find the IDs of the users who visited without making any transactions and the number of times they made these types of visits.
+
 SELECT customer_id,
 		 count(visit_id) AS count_no_trans
 FROM 
@@ -19,6 +21,7 @@ FROM
 	GROUP BY  customer_id;
 
 -- Write a solution to report the product_name, year, and price for each sale_id in the Sales table.
+
 SELECT p.product_name,
 		 s.year,
 		 s.price
@@ -31,6 +34,7 @@ LEFT JOIN Product p
 -- The time to complete a process is the 'end' timestamp minus the 'start' timestamp. 
 -- The average time is calculated by the total time to complete every process on the machine divided by the number of processes that were run.
 -- The resulting table should have the machine_id along with the average time as processing_time, which should be rounded to 3 decimal places.
+
 with t1 AS 
 	(SELECT machine_id,
 		 process_id,
@@ -52,6 +56,7 @@ JOIN t2 using(machine_id)
 GROUP BY  t1.machine_id;
 
 -- Write a solution to find all dates' id with higher temperatures compared to its previous dates (yesterday).
+
 SELECT id
 FROM 
 	(SELECT id,
