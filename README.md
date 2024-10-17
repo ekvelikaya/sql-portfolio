@@ -1,1 +1,1 @@
-# Stepik Course
+# SQL Courses
