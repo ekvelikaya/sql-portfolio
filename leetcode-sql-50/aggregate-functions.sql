@@ -88,4 +88,4 @@ FROM (SELECT player_id,
              event_date - FIRST_VALUE(event_date) OVER (PARTITION BY player_id
                  ORDER BY
                      event_date) data_diff
-      FROM Activity) t1
+      FROM Activity) t1;
