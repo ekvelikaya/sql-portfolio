@@ -7,6 +7,20 @@ FROM employees e
 LEFT JOIN EmployeeUNI u
 	ON e.id=u.id;
 
+-- Write a solution to find the number of times each student attended each exam.
+
+SELECT s.student_id,
+		 s.student_name,
+		 sub.subject_name,
+		 COUNT(e.student_id) AS attended_exams
+FROM Students AS s
+CROSS JOIN Subjects AS sub
+LEFT JOIN Examinations AS e
+	ON s.student_id = e.student_id
+		AND sub.subject_name = e.subject_name
+GROUP BY  s.student_id, s.student_name, sub.subject_name
+ORDER BY  s.student_id, sub.subject_name;
+
 -- Write a solution to find the IDs of the users who visited without making any transactions and the number of times they made these types of visits.
 
 SELECT customer_id,
@@ -67,4 +81,25 @@ FROM
 	FROM Weather ) t1
 WHERE temperature>prev_temp
 		AND (recorddate-prev_date) = 1
+
+-- Write a solution to report the name and bonus amount of each employee with a bonus less than 1000.
+
+SELECT name,
+		 bonus
+FROM Employee
+LEFT JOIN bonus using(empId)
+WHERE bonus < 1000
+		OR bonus is NULL;
+
+
+-- Write a solution to find managers with at least five direct reports.
+
+SELECT name
+FROM Employee
+WHERE id IN 
+	(SELECT managerid
+	FROM Employee
+	GROUP BY  managerid
+	HAVING count(managerid)>= 5);
+
 
