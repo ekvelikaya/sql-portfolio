@@ -26,3 +26,29 @@ WHERE (product_id, year) IN (SELECT product_id,
 	                        FROM Sales
 	                        GROUP BY  product_id);
 
+-- Write a solution to find all the classes that have at least five students.
+
+SELECT class
+FROM Courses
+GROUP BY  class
+HAVING count(student) >=5;
+
+-- Write a solution that will, for each user, return the number of followers.
+-- Return the result table ordered by user_id in ascending order.
+
+SELECT user_id,
+		 count(follower_id) AS followers_count
+FROM Followers
+GROUP BY  user_id
+ORDER BY  user_id asc;
+
+-- A single number is a number that appeared only once in the MyNumbers table.
+-- Find the largest single number. If there is no single number, report null.
+
+SELECT max(num) AS num
+FROM 
+	(SELECT num
+	FROM MyNumbers
+	GROUP BY  num
+	HAVING count(num) = 1);
+
