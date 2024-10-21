@@ -1,3 +1,13 @@
+-- The confirmation rate of a user is the number of 'confirmed' messages divided by the total number of requested confirmation messages. 
+-- The confirmation rate of a user that did not request any confirmation messages is 0. Round the confirmation rate to two decimal places.
+-- Write a solution to find the confirmation rate of each user.
+
+SELECT user_id,
+		 round(count(*) filter(where action='confirmed')::decimal/count(*),2) AS confirmation_rate
+FROM Confirmations
+RIGHT JOIN Signups using(user_id)
+GROUP BY  user_id;
+
 
 -- Write a solution to show the unique ID of each user, If a user does not have a unique ID replace just show null.
 
