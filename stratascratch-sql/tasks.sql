@@ -139,3 +139,18 @@ SELECT count(distinct movie)
 FROM oscar_nominees
 WHERE nominee = 'Abigail Breslin';
 
+-- Find all posts which were reacted to with a heart. For such posts output all columns from facebook_posts table.
+
+SELECT post_id,
+		 poster,
+		 post_text,
+		 post_keywords,
+		 post_date
+FROM facebook_posts
+WHERE post_id IN 
+	(SELECT post_id
+	FROM facebook_reactions
+	WHERE reaction = 'heart');
+
+
+
