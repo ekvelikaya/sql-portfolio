@@ -23,3 +23,13 @@ FROM employee
 WHERE salary <
 	(SELECT max(salary)
 	FROM employee);
+
+-- Write a solution to fix the names so that only the first character is uppercase and the rest are lowercase.
+
+SELECT 
+    user_id, 
+    CONCAT(upper(substring(name, 1, 1)), lower(substring(name, 2))) AS name
+FROM 
+    users
+ORDER BY 
+    user_id;
