@@ -43,3 +43,26 @@ SELECT patient_id,
 FROM Patients
 WHERE conditions LIKE '% DIAB1%'
 		OR conditions LIKE 'DIAB1%';
+
+-- Write a solution to find for each date the number of different products sold and their names.
+-- The sold products names for each date should be sorted lexicographically.
+-- Return the result table ordered by sell_date.
+
+SELECT sell_date, 
+		COUNT(DISTINCT product) AS num_sold, 
+		STRING_AGG(DISTINCT product, ',' ORDER BY product) AS products
+FROM Activities
+GROUP BY sell_date
+ORDER BY sell_date;
+
+-- Write a solution to get the names of products that have at least 100 units ordered in February 2020 and their amount.
+
+SELECT product_name,
+		 sum(unit) AS unit
+FROM Orders
+LEFT JOIN Products
+	ON Orders.product_id=Products.product_id
+WHERE date_part('year', order_date) = 2020
+	  AND date_part('month', order_date) = 2
+GROUP BY  product_name
+HAVING sum(unit) >= 100;
