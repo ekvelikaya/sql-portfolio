@@ -1,3 +1,5 @@
+-- Введение и операторы
+
 -- 1. 
 
 SELECT *
@@ -40,6 +42,8 @@ FROM checks
 WHERE BuyDate = '2019-09-01'
 		AND Rub > 2000
 ORDER BY  UserID DESC;
+
+-- Группировка и агрегатные функции
 
 -- 7. 
 
@@ -128,4 +132,42 @@ WHERE Description!='Manual' and Country = 'United Kingdom' and Quantity>0
 GROUP BY toStartOfMonth(InvoiceDate)
 ORDER BY avg_q DESC
 LIMIT 1;
+
+-- Объединение таблиц - JOIN
+
+-- 16.
+
+SELECT e.DeviceID,
+		 d.UserID,
+		 e.events
+FROM events e
+LEFT JOIN devices d
+	ON e.DeviceID = d.DeviceID
+ORDER BY  DeviceID DESC;
+
+-- 17.
+
+SELECT Source,
+		 count(UserID) AS users_count
+FROM installs i
+LEFT JOIN devices d
+	ON i.DeviceID = d.DeviceID
+GROUP BY  Source
+ORDER BY  users_count DESC;
+
+-- 18. 
+
+SELECT 
+    COUNT(DISTINCT c.UserID) as Uniq_users_count,
+    i.Source as Source
+FROM 
+    checks as c
+JOIN devices as d
+    ON c.UserID = d.UserID
+JOIN installs as i
+    ON d.DeviceID = i.DeviceID
+WHERE i.Source = 'Source_7'
+GROUP BY 
+    i.Source;
+
 
