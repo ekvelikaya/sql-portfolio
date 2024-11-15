@@ -219,7 +219,7 @@ GROUP BY  Platform;
 
 SELECT count(distinct i.DeviceID) as i_devices,
 		 count(distinct e.DeviceID) as e_devices,
-		 count(distinct e.DeviceID)/count(distinct i.DeviceID) as share,
+		 count(distinct e.DeviceID)/count(distinct i.DeviceID) as conversion,
 		 Platform
 FROM default.installs i
 LEFT JOIN default.events e
@@ -235,5 +235,14 @@ LEFT JOIN default.installs i
 WHERE i.DeviceID = 0
 ORDER BY  DeviceID DESC limit 10;
 
+-- Типы данных и их преобразование
 
+-- 25.
+
+SELECT toStartOfMonth(toDateOrNull(host_since)) AS StartMonth,
+		 COUNT(DISTINCT host_id) AS NumHosts
+FROM listings
+GROUP BY  StartMonth
+ORDER BY  NumHosts DESC 
+LIMIT 10;
 
