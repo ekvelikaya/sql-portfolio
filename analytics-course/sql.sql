@@ -170,4 +170,70 @@ WHERE i.Source = 'Source_7'
 GROUP BY 
     i.Source;
 
+-- 19.
+
+SELECT i.Source,
+		 SUM(Rub) AS Revenue,
+		 MIN(Rub) AS MinRub,
+		 MAX(Rub) AS MaxRub,
+		 AVG(Rub) AS AvgRub
+FROM default.checks AS c
+JOIN default.devices AS d
+	ON c.UserID = d.UserID
+JOIN installs AS i
+	ON d.DeviceID = i.DeviceID
+GROUP BY  i.Source;
+
+-- 20.
+
+SELECT c.UserID,
+		 d.DeviceID
+FROM default.checks c
+LEFT JOIN default.devices d
+	ON c.UserID = d.UserID
+WHERE toMonth(BuyDate::date) = 10
+		AND toYear(BuyDate::date) = 2019
+ORDER BY  d.DeviceID ASC limit 10;
+
+-- 21.
+
+SELECT avg(e.events) AS avg_events,
+		 i.Source,
+		 e.AppPlatform
+FROM default.events e
+JOIN default.installs i
+	ON e.DeviceID = i.DeviceID
+GROUP BY  e.AppPlatform, i.Source
+ORDER BY  avg_events desc;
+
+-- 22.
+
+SELECT count(distinct i.DeviceID),
+		 Platform
+FROM default.installs i
+JOIN default.events e
+	ON i.DeviceID = e.DeviceID
+GROUP BY  Platform;
+
+-- 23.
+
+SELECT count(distinct i.DeviceID) as i_devices,
+		 count(distinct e.DeviceID) as e_devices,
+		 count(distinct e.DeviceID)/count(distinct i.DeviceID) as share,
+		 Platform
+FROM default.installs i
+LEFT JOIN default.events e
+	ON i.DeviceID = e.DeviceID
+GROUP BY  Platform;
+
+-- 24.
+
+SELECT DISTINCT e.DeviceID
+FROM default.events e
+LEFT JOIN default.installs i
+	ON e.DeviceID = i.DeviceID
+WHERE i.DeviceID = 0
+ORDER BY  DeviceID DESC limit 10;
+
+
 
