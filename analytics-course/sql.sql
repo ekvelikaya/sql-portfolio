@@ -246,3 +246,106 @@ GROUP BY  StartMonth
 ORDER BY  NumHosts DESC 
 LIMIT 10;
 
+-- 26.
+
+SELECT host_is_superhost,
+    	AVG(toInt32OrNull(replaceAll(host_response_rate, '%', ''))) as AvgResp,
+		MIN(toInt32OrNull(replaceAll(host_response_rate, '%', ''))) as MinResp,
+    	MAX(toInt32OrNull(replaceAll(host_response_rate, '%', ''))) as MaxResp
+FROM
+    (SELECT 
+        DISTINCT host_id,
+            	host_response_rate,
+            	host_is_superhost
+    FROM listings) as sub
+WHERE 
+    host_is_superhost != ''
+GROUP BY
+    host_is_superhost
+LIMIT 10;
+
+-- 27.
+
+SELECT host_id,
+    	groupArray(id) as host_listings,
+    	groupArray(price) as prices,
+    	AVG(toFloat64OrNull(replaceRegexpAll(price, '[$,]', ''))) as AvgPricePerHost
+FROM
+    listings
+GROUP BY
+    host_id
+ORDER BY
+    AvgPricePerHost DESC
+LIMIT 10;
+
+-- 28.
+
+SELECT host_id,
+    	groupArray(id) as host_listings,
+    	MIN(toFloat64OrNull(replaceRegexpAll(price, '[$,]', ''))) as MinPricePerHost,
+    	MAX(toFloat64OrNull(replaceRegexpAll(price, '[$,]', ''))) as MaxPricePerHost,
+    	MaxPricePerHost - MinPricePerHost AS price_diff
+FROM
+    listings
+GROUP BY
+    host_id
+ORDER BY
+    price_diff DESC
+LIMIT 10;
+
+-- 29.
+
+SELECT room_type,
+		AVG(toFloat32OrNull(replaceRegexpAll(price, '[$,]', ''))) as AvgPrice,
+		AVG(toFloat32OrNull(replaceRegexpAll(security_deposit, '[$,]', ''))) as AvgSecurityDeposit,
+		AVG(toFloat32OrNull(replaceRegexpAll(cleaning_fee, '[$,]', ''))) as AvgClean
+FROM
+    listings
+GROUP BY
+    room_type
+ORDER BY
+    AvgSecurityDeposit DESC;
+
+-- 30.
+
+SELECT neighbourhood_cleansed,
+		AVG(toFloat32OrNull(replaceRegexpAll(price, '[$,]', ''))) as AvgPrice,
+		MAX(toFloat32OrNull(replaceRegexpAll(price, '[$,]', ''))) as MaxPrice,
+		MIN(toFloat32OrNull(replaceRegexpAll(price, '[$,]', ''))) as MinPrice
+FROM
+    listings
+GROUP BY
+    neighbourhood_cleansed 
+ORDER BY
+    AvgPrice
+LIMIT 10;
+
+-- 31.
+
+SELECT neighbourhood_cleansed,
+    	AVG(toFloat32OrNull(square_feet)) as AvgSquare
+FROM
+    listings
+WHERE
+    room_type = 'Entire home/apt'
+GROUP BY
+    neighbourhood_cleansed 
+ORDER BY
+    AvgSquare DESC
+LIMIT 10;
+
+-- 32.
+
+SELECT id,
+		host_id,
+		toFloat64OrNull(latitude) as latitude,
+		toFloat64OrNull(longitude) as longitude,
+		geoDistance(13.4050, 52.5200, longitude, latitude) as dist
+FROM
+    listings
+WHERE 
+    room_type = 'Private room'
+ORDER BY
+    dist 
+LIMIT 1;
+
