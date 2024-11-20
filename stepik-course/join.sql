@@ -70,3 +70,70 @@ JOIN supply
 	ON supply.title = book.title
 		AND supply.price = book.price;
 
+-- 8.
+
+SELECT buy.buy_id,
+		 book.title,
+		 book.price,
+		 buy_book.amount
+FROM client
+INNER JOIN buy
+	ON client.client_id=buy.client_id
+INNER JOIN buy_book
+	ON buy.buy_id=buy_book.buy_id
+INNER JOIN book
+	ON book.book_id=buy_book.book_id
+WHERE client.client_id=1
+ORDER BY  buy_id, title;
+
+-- 9.
+
+SELECT name_author,
+		 title,
+		 count(buy_book.book_id) AS Количество
+FROM author
+LEFT JOIN book
+	ON book.author_id=author.author_id
+LEFT JOIN buy_book
+	ON buy_book.book_id=book.book_id
+WHERE title is not null
+GROUP BY  name_author, title
+ORDER BY  name_author, title;
+
+-- 10.
+
+SELECT name_city,
+		 count(*) AS Количество
+FROM buy
+INNER JOIN client
+	ON client.client_id=buy.client_id
+INNER JOIN city
+	ON city.city_id=client.city_id
+GROUP BY  name_city;
+
+-- 11.
+
+SELECT buy_id,
+		 date_step_end
+FROM buy_step
+WHERE step_id=1
+		AND date_step_end is not null;
+
+-- 12.
+
+SELECT buy.buy_id,
+		 name_client,
+		 sum(buy_book.amount*book.price) AS Стоимость
+FROM buy
+JOIN client
+	ON buy.client_id=client.client_id
+JOIN buy_book
+	ON buy_book.buy_id=buy.buy_id
+JOIN book
+	ON book.book_id=buy_book.book_id
+GROUP BY  buy.buy_id
+ORDER BY  buy.buy_id;
+
+
+
+
