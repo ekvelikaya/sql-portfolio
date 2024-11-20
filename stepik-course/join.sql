@@ -134,6 +134,28 @@ JOIN book
 GROUP BY  buy.buy_id
 ORDER BY  buy.buy_id;
 
+-- 13.
 
+WITH genre_totals AS 
+		(SELECT genre_id, SUM(amount) AS total_amount
+		FROM book
+		GROUP BY  genre_id ), 
+	most_popular_genre AS 
+		(SELECT genre_id
+		FROM genre_totals
+		WHERE total_amount = (SELECT MAX(total_amount) FROM genre_totals))
+
+SELECT b.title,
+		 a.name_author,
+		 g.name_genre,
+		 b.price,
+		 b.amount
+FROM book b
+INNER JOIN author a
+	ON a.author_id = b.author_id
+INNER JOIN genre g
+	ON b.genre_id = g.genre_id
+WHERE b.genre_id IN (SELECT genre_id FROM most_popular_genre)
+ORDER BY  b.title; 
 
 
