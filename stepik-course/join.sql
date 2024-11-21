@@ -158,4 +158,31 @@ INNER JOIN genre g
 WHERE b.genre_id IN (SELECT genre_id FROM most_popular_genre)
 ORDER BY  b.title; 
 
+-- 14.
+
+SELECT buy.buy_id,
+		 name_client,
+		 sum(buy_book.amount*book.price) AS Стоимость
+FROM buy
+JOIN client
+	ON buy.client_id=client.client_id
+JOIN buy_book
+	ON buy_book.buy_id=buy.buy_id
+JOIN book
+	ON book.book_id=buy_book.book_id
+GROUP BY  buy.buy_id
+ORDER BY  buy.buy_id;
+
+-- 15.
+
+SELECT buy.buy_id,
+		 step.name_step
+FROM buy
+JOIN buy_step
+	ON buy_step.buy_id=buy.buy_id
+JOIN step
+	ON step.step_id=buy_step.step_id
+WHERE date_step_beg is NOT null
+		AND date_step_end is NULL;
+
 
