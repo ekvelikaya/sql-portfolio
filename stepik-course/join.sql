@@ -225,5 +225,90 @@ HAVING sum(buy_book.amount) =
 		GROUP BY  genre_id) AS count_table
 	);
 
+-- 18.
+
+
+-- 19.
+
+
+-- 20.
+
+SELECT name_student,
+		 date_attempt,
+		 result
+FROM attempt
+JOIN student using(student_id)
+JOIN subject using(subject_id)
+WHERE name_subject = 'Основы баз данных'
+ORDER BY result desc;
+
+-- 21.
+
+SELECT name_subject,
+		 count(result) AS Количество,
+		 round(avg(result),
+		 2) AS Среднее
+FROM subject
+LEFT JOIN attempt
+	ON subject.subject_id=attempt.subject_id
+GROUP BY  name_subject;
+
+-- 22.
+
+SELECT name_student,
+		 result
+FROM student
+JOIN attempt
+	ON student.student_id=attempt.student_id
+HAVING result IN 
+	(SELECT max(result)
+	FROM attempt)
+ORDER BY  name_student;
+
+-- 23.
+
+SELECT name_student,
+		 name_subject,
+		 datediff(max(date_attempt),
+		 min(date_attempt)) AS Интервал
+FROM student
+JOIN attempt using(student_id)
+JOIN subject using(subject_id)
+GROUP BY  name_student, name_subject
+HAVING count(attempt_id) > 1
+ORDER BY Интервал;
+
+-- 24.
+
+SELECT name_subject,
+		 coalesce(count(distinct student_id), 0) AS Количество
+FROM subject
+LEFT JOIN attempt using(subject_id)
+GROUP BY  name_subject
+ORDER BY  Количество desc, name_subject;
+
+-- 25.
+
+SELECT question_id,
+		 name_question
+FROM question
+JOIN subject using(subject_id)
+WHERE name_subject = 'Основы баз данных'
+ORDER BY  RAND() 
+LIMIT 3;
+
+-- 26.
+
+SELECT name_question,
+		 name_answer,
+	CASE
+	WHEN is_correct=1 THEN 'Верно'
+	ELSE 'Неверно'
+	END AS Результат
+FROM question
+JOIN testing using(question_id)
+JOIN answer using(answer_id)
+WHERE attempt_id=7;
+
 
 
