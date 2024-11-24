@@ -121,6 +121,16 @@ WHERE step_id=1
 
 -- 12.
 
+SELECT buy_id,
+		 name_client,
+		 sum(buy_book.amount*price) AS Стоимость
+FROM buy
+LEFT JOIN client using(client_id)
+LEFT JOIN buy_book using(buy_id)
+LEFT JOIN book using(book_id)
+GROUP BY  buy_id, name_client
+ORDER BY  buy_id;
+
 SELECT buy.buy_id,
 		 name_client,
 		 sum(buy_book.amount*book.price) AS Стоимость
@@ -131,7 +141,7 @@ JOIN buy_book
 	ON buy_book.buy_id=buy.buy_id
 JOIN book
 	ON book.book_id=buy_book.book_id
-GROUP BY  buy.buy_id
+GROUP BY  buy.buy_id, name_client
 ORDER BY  buy.buy_id;
 
 -- 13.
@@ -160,29 +170,13 @@ ORDER BY  b.title;
 
 -- 14.
 
-SELECT buy.buy_id,
-		 name_client,
-		 sum(buy_book.amount*book.price) AS Стоимость
-FROM buy
-JOIN client
-	ON buy.client_id=client.client_id
-JOIN buy_book
-	ON buy_book.buy_id=buy.buy_id
-JOIN book
-	ON book.book_id=buy_book.book_id
-GROUP BY  buy.buy_id
-ORDER BY  buy.buy_id;
-
--- 15.
-
-SELECT buy.buy_id,
-		 step.name_step
-FROM buy
-JOIN buy_step
-	ON buy_step.buy_id=buy.buy_id
-JOIN step
-	ON step.step_id=buy_step.step_id
+SELECT buy_id,
+		 name_step
+FROM buy_step
+JOIN step using(step_id)
 WHERE date_step_beg is NOT null
-		AND date_step_end is NULL;
+		AND date_step_end is null
+ORDER BY  buy_id;
+
 
 
