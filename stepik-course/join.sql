@@ -178,5 +178,52 @@ WHERE date_step_beg is NOT null
 		AND date_step_end is null
 ORDER BY  buy_id;
 
+-- 15.
+
+SELECT buy.buy_id,
+		 datediff(date_step_end, date_step_beg) AS Количество_дней,	
+		 CASE
+		 WHEN datediff(date_step_end, date_step_beg)-days_delivery>0 THEN datediff(date_step_end, date_step_beg)-days_delivery
+		 ELSE 0
+		 END AS Опоздание
+FROM buy
+LEFT JOIN client using(client_id)
+LEFT JOIN city using(city_id)
+LEFT JOIN buy_step using(buy_id)
+WHERE step_id = 3
+		AND date_step_end is NOT null
+ORDER BY  buy_id;
+
+-- 16.
+
+SELECT distinct name_client
+FROM client
+JOIN buy
+	ON buy.client_id=client.client_id
+JOIN buy_book
+	ON buy.buy_id=buy_book.buy_id
+JOIN book
+	ON book.book_id=buy_book.book_id
+WHERE book.author_id=2
+ORDER BY  name_client;
+
+-- 17.
+
+SELECT name_genre,
+		sum(buy_book.amount) AS Количество
+FROM genre
+JOIN book using(genre_id)
+JOIN buy_book using(book_id)
+GROUP BY  name_genre
+HAVING sum(buy_book.amount) = 
+	(SELECT max(total_count)
+	FROM 
+		(SELECT genre_id,
+				sum(buy_book.amount) AS total_count
+		FROM buy_book
+		JOIN book using(book_id)
+		GROUP BY  genre_id) AS count_table
+	);
+
 
 
