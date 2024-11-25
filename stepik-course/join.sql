@@ -346,5 +346,36 @@ JOIN subject using(subject_id)
 WHERE name_subject = 'Информатика';
 
 
+-- 31.
+
+SELECT name_subject,
+		 count(enrollee_id) AS Количество,
+		 max(result) AS Максимум,
+		 min(result) AS Минимум,
+		 round(avg(result), 1) AS Среднее
+FROM enrollee_subject
+JOIN subject using(subject_id)
+GROUP BY  name_subject
+ORDER BY  name_subject;
+
+-- 32.
+
+SELECT name_program
+FROM program
+JOIN program_subject using(program_id)
+GROUP BY  name_program
+HAVING MIN(min_result) >= 40
+ORDER BY  name_program;
+
+-- 33.
+
+SELECT name_program,
+		 plan
+FROM program
+WHERE plan IN 
+	(SELECT max(plan)
+	FROM program);
+
+
 
 
