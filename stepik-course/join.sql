@@ -330,4 +330,21 @@ ORDER BY  name_student, date_attempt DESC;
 
 -- 29.
 
+SELECT name_enrollee
+FROM enrollee
+LEFT JOIN program_enrollee using(enrollee_id)
+LEFT JOIN program using(program_id)
+WHERE name_program = 'Мехатроника и робототехника'
+ORDER BY  name_enrollee;
+
+-- 30.
+
+SELECT DISTINCT name_program
+FROM program
+JOIN program_subject using(program_id)
+JOIN subject using(subject_id)
+WHERE name_subject = 'Информатика';
+
+
+
 
