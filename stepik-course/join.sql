@@ -311,4 +311,23 @@ JOIN answer using(answer_id)
 WHERE attempt_id=7;
 
 
+-- 27.
+
+SELECT name_student,
+		 name_subject,
+		 date_attempt,
+		 round(sum(is_correct)/3*100,2) AS Результат
+FROM answer
+JOIN testing using(answer_id)
+JOIN attempt using(attempt_id)
+JOIN subject using(subject_id)
+JOIN student using(student_id)
+GROUP BY  name_student, name_subject, date_attempt
+ORDER BY  name_student, date_attempt DESC;
+
+-- 28.
+
+
+-- 29.
+
 
