@@ -310,7 +310,6 @@ JOIN testing using(question_id)
 JOIN answer using(answer_id)
 WHERE attempt_id=7;
 
-
 -- 27.
 
 SELECT name_student,
@@ -345,7 +344,6 @@ JOIN program_subject using(program_id)
 JOIN subject using(subject_id)
 WHERE name_subject = 'Информатика';
 
-
 -- 31.
 
 SELECT name_subject,
@@ -376,6 +374,38 @@ WHERE plan IN
 	(SELECT max(plan)
 	FROM program);
 
+-- 34.
 
+SELECT name_enrollee,
+		 SUM(COALESCE(bonus,0)) AS Бонус
+FROM enrollee
+LEFT JOIN enrollee_achievement using(enrollee_id)
+LEFT JOIN achievement using(achievement_id)
+GROUP BY  name_enrollee
+ORDER BY  name_enrollee;
+
+-- 35.
+
+SELECT name_department,
+		 name_program,
+		 plan,
+		 count(program_enrollee_id) AS Количество,
+		 round(count(program_enrollee_id)/plan,2) AS Конкурс
+FROM department
+LEFT JOIN program using(department_id)
+LEFT JOIN program_enrollee using(program_id)
+GROUP BY  name_department, name_program, plan
+ORDER BY  Конкурс desc;
+
+-- 36.
+
+SELECT name_program
+FROM program
+JOIN program_subject using(program_id)
+JOIN subject using(subject_id)
+WHERE name_subject IN ('Информатика', 'Математика')
+GROUP BY  1
+HAVING count(name_subject) = 2
+ORDER BY  1 asc;
 
 
