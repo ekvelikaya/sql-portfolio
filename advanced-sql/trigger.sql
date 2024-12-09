@@ -19,5 +19,22 @@ END;
 
 -- 3.
 
+CREATE TRIGGER clear_names BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+   SET 
+       NEW.first_name = TRIM(NEW.first_name),
+       NEW.last_name = TRIM(NEW.last_name);
+END;
 
+-- 4.
+
+CREATE TRIGGER clear_data BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+   SET 
+       NEW.first_name = TRIM(NEW.first_name),
+       NEW.last_name = TRIM(NEW.last_name),
+       NEW.email = TRIM(LOWER(NEW.email));
+END;
 
