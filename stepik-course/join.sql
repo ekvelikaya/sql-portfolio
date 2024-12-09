@@ -408,4 +408,43 @@ GROUP BY  1
 HAVING count(name_subject) = 2
 ORDER BY  1 asc;
 
+-- 37.
+
+SELECT p.name_program, 
+		e.name_enrollee, 
+		SUM(es.result) AS itog
+FROM program_subject ps
+INNER JOIN program p USING(program_id)
+INNER JOIN program_enrollee pe USING(program_id)
+INNER JOIN enrollee e USING(enrollee_id)
+INNER JOIN enrollee_subject es ON es.subject_id = ps.subject_id AND es.enrollee_id = pe.enrollee_id
+GROUP BY 1, 2
+ORDER BY 1, 3 DESC;
+
+-- 38.
+
+SELECT name_program,
+		name_enrollee
+FROM enrollee
+JOIN program_enrollee USING(enrollee_id)
+JOIN program USING(program_id)
+JOIN program_subject USING(program_id)
+JOIN subject USING(subject_id)
+JOIN enrollee_subject USING(subject_id)
+WHERE enrollee_subject.enrollee_id = enrollee.enrollee_id and result < min_result
+ORDER BY 1, 2;
+
+-- 39.
+
+SELECT CONCAT(LEFT(CONCAT(module_id, ' ', module_name), 16), '...') Модуль,
+       CONCAT(LEFT(CONCAT(module_id, '.', lesson_position, ' ', lesson_name), 16), '...') Урок,
+       CONCAT(module_id, '.', lesson_position, '.', step_position, ' ', step_name) Шаг
+  FROM module
+       INNER JOIN lesson USING(module_id)
+       INNER JOIN step   USING(lesson_id)
+ WHERE step_name LIKE '%ложенн% запрос%'
+ ORDER BY module_id, lesson_id, step_id;
+
+
+
 

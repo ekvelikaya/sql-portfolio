@@ -152,3 +152,54 @@ LEFT JOIN cyber_teams on cyber_results.team_id=cyber_teams.id
 GROUP BY cyber_teams.team
 ORDER BY place, team;
 
+--
+SELECT NTILE(3) OVER(ORDER BY id) as mail_variant, 
+		id,
+		email,
+		first_name
+FROM users 
+ORDER BY id;
+
+--
+SELECT NTILE(4) OVER(ORDER BY MD5(email)) as mail_variant, 
+		id,
+		email,
+		first_name
+FROM users 
+ORDER BY id;
+
+--
+SELECT name, 
+		first_name, 
+		last_name,
+		sum(amount) as amount,
+		NTILE(4) OVER(PARTITION BY name ORDER BY sum(amount) desc) as c_level
+FROM orders
+LEFT JOIN users on orders.user_id = users.id
+LEFT JOIN shops on orders.shop_id = shops.id
+WHERE status="success"
+GROUP BY name, first_name, last_name
+ORDER BY name, c_level;
+
+-- 
+SELECT month, 
+		first_name, 
+		last_name, 
+		amount
+FROM (
+    SELECT 
+        MONTH(date) AS month, 
+        users.first_name, 
+        users.last_name, 
+        SUM(orders.amount) AS amount, 
+        NTILE(4) OVER (PARTITION BY MONTH(date) ORDER BY SUM(orders.amount) DESC) AS level
+    FROM orders
+    JOIN users ON orders.user_id = users.id
+    WHERE orders.status = 'success'
+    GROUP BY MONTH(date), users.first_name, users.last_name
+	) AS t1
+WHERE level = 1
+ORDER BY month, amount ASC;
+
+
+
