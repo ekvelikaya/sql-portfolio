@@ -109,3 +109,46 @@ SELECT FLOOR(year / 10) * 10 AS decade,
          name
 FROM films
 ORDER BY  FLOOR(year / 10) * 10, place;
+
+--
+SELECT street,
+		house,
+		price,
+		rooms
+FROM (SELECT street, house, price, rooms, RANK() OVER(ORDER BY price) as rank_num
+        FROM flats
+        WHERE rooms > 1) as place
+WHERE place.rank_num < 4
+ORDER BY rooms desc, price;
+
+--
+SELECT rooms, 
+		street, 
+		house,
+		price
+FROM (SELECT street, house, price, rooms, RANK() OVER(PARTITION BY rooms ORDER BY price) as rank_num
+        FROM flats
+        WHERE rooms > 1) as place
+WHERE place.rank_num < 4
+ORDER BY rooms, price;
+
+--
+SELECT street, 
+		house, 
+		price, 
+		rooms
+FROM (SELECT street, house, price, rooms, DENSE_RANK() OVER(ORDER BY price) as rank_num
+        FROM flats
+        WHERE rooms > 1) as place
+WHERE place.rank_num < 4
+ORDER BY price, rooms desc;
+
+--
+SELECT DENSE_RANK() OVER(ORDER BY sum(cyber_results.kills-cyber_results.deaths*3) desc) as place, 
+		cyber_teams.team as team,
+		sum(cyber_results.kills-cyber_results.deaths*3) as points
+FROM cyber_results
+LEFT JOIN cyber_teams on cyber_results.team_id=cyber_teams.id
+GROUP BY cyber_teams.team
+ORDER BY place, team;
+
