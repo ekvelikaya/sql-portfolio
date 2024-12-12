@@ -201,5 +201,49 @@ FROM (
 WHERE level = 1
 ORDER BY month, amount ASC;
 
+--
+SELECT month, 
+		SUM(CASE WHEN year = 2020 THEN income ELSE 0 END) AS in2020, 
+		SUM(CASE WHEN year = 2021 THEN income ELSE 0 END) AS in2021,
+		SUM(CASE WHEN year = 2021 THEN income ELSE 0 END) - 
+		SUM(CASE WHEN year = 2020 THEN income ELSE 0 END) AS diff
+FROM revenues
+GROUP BY month;
+
+--
+SELECT CEIL(month / 3) AS quarter, 
+		SUM(CASE WHEN year = 2020 THEN income ELSE 0 END) AS in2020, 
+		SUM(CASE WHEN year = 2021 THEN income ELSE 0 END) AS in2021,
+		SUM(CASE WHEN year = 2021 THEN income ELSE 0 END) - 
+		SUM(CASE WHEN year = 2020 THEN income ELSE 0 END) AS diff
+FROM revenues
+GROUP BY quarter
+ORDER BY quarter;
+
+--
+SELECT month,
+    ROUND(
+        SUM(CASE WHEN year = 2021 THEN income ELSE 0 END) *
+        (SUM(CASE WHEN year = 2021 THEN income ELSE 0 END) / 
+         SUM(CASE WHEN year = 2020 THEN income ELSE NULL END))
+    ) AS plan
+FROM revenues
+WHERE year IN (2020, 2021)
+GROUP BY month
+ORDER BY month;
+
+--
+SELECT
+    RANK() OVER (ORDER BY SUBTIME(end_time, start_time)) as place,
+    last_name, 
+	first_name,
+    TIME_FORMAT(SUBTIME(end_time, start_time), '%T') as time,
+    TIME_FORMAT(SUBTIME(SUBTIME(end_time, start_time), 
+    FIRST_VALUE(SUBTIME(end_time, start_time)) OVER (ORDER BY SUBTIME(end_time, start_time))), '%T') as chempion_lag
+FROM runners
+ORDER BY SUBTIME(end_time, start_time);
+
+
+
 
 
