@@ -39,4 +39,16 @@ SELECT *,
 	END AS triangle
 FROM Triangle;
 
+-- Find all numbers that appear at least three times consecutively. Return the result table in any order.
+
+SELECT num AS ConsecutiveNums
+FROM (
+	SELECT num,
+	lag(num) over(ORDER BY id)  AS pref,
+	lead(num) over(ORDER BY id) AS post
+	FROM logs
+	) AS log
+WHERE (log.num=pref) AND (log.num=post)
+GROUP BY num;
+
 
